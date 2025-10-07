@@ -43,13 +43,11 @@
 
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Obtener los valores del formulario
         $num1 = $_POST['num1'];
         $num2 = $_POST['num2'];
         $operation = $_POST['operation'];
         $result = null;
-
-        // Validar y realizar la operación
+        
         switch ($operation) {
             case "add":
                 $result = $num1 + $num2;
@@ -71,7 +69,6 @@
                 $result = "Operación no válida.";
         }
 
-        // Mostrar el resultado
         echo "<h2>Resultado:</h2>";
         echo "<p>" . htmlspecialchars($result) . "</p>";
     }
