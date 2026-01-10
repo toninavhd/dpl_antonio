@@ -1,0 +1,118 @@
+/* Estilos básicos para la Calculadora PHP */
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.calculator-container {
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  padding: 30px;
+  max-width: 400px;
+  width: 100%;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.8em;
+}
+
+.calculator-image {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.calculator-image img {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+  font-weight: bold;
+}
+
+input[type="number"],
+select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+input[type="number"]:focus,
+select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.calculate-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.calculate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.calculate-btn:active {
+  transform: translateY(0);
+}
+
+.result {
+  margin-top: 25px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  border-left: 5px solid #667eea;
+}
+
+.result h2 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 1.3em;
+}
+
+.result-value {
+  font-size: 1.5em;
+  color: #667eea;
+  font-weight: bold;
+  margin: 0;
+}
+
+.result.error {
+  border-left-color: #dc3545;
+  background-color: #fff8f8;
+}
+
+.result.error .result-value {
+  color: #dc3545;
+}

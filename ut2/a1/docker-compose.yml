@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    ports:
+      - "8017:80"
+    container_name: calculadora-nginx-php
+    restart: always

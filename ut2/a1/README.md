@@ -1,43 +1,339 @@
-
 <center>
 
-# TÍTULO DE LA PRÁCTICA
-
+# Implantación de Calculadora PHP con Nginx + PHP-FPM
 
 </center>
 
-***Nombre:***
-***Curso:*** 2º de Ciclo Superior de Desarrollo de Aplicaciones Web.
+**_Alumno:_**
+**_Curso:_** 2º de Ciclo Superior de Desarrollo de Aplicaciones Web
+
+---
 
 ### ÍNDICE
 
-+ [Introducción](#id1)
-+ [Objetivos](#id2)
-+ [Material empleado](#id3)
-+ [Desarrollo](#id4)
-+ [Conclusiones](#id5)
+- [Introducción](#id1)
+- [Objetivos](#id2)
+- [Material empleado](#id3)
+- [Desarrollo](#id4)
+  - [Entorno Nativo](#id4-1)
+  - [Entorno Dockerizado](#id4-2)
+- [Conclusiones](#id5)
 
+---
 
-#### ***Introducción***. <a name="id1"></a>
+## **1. Introducción** <a name="id1"></a>
 
-Aquí explicamos brevemente la parte teórica que tiene que ver con la práctica que se va a realizar
+Esta práctica consiste en desplegar una aplicación PHP que funciona como calculadora utilizando el servidor web Nginx junto con PHP-FPM. Se implementarán dos entornos de despliegue:
 
-#### ***Objetivos***. <a name="id2"></a>
+1. **Entorno Nativo**: Instalación directa en el sistema operativo
+2. **Entorno Dockerizado**: Contenedor Docker con Nginx + PHP-FPM
 
-Aquí explicamos los objetivos que se pretenden alcanzar al realizar la práctica.
+Ambas implementaciones permitirán realizar operaciones matemáticas básicas (suma, resta, multiplicación y división) a través de una interfaz web intuitiva.
 
-#### ***Material empleado***. <a name="id3"></a>
+---
 
-Enumeramos el material empleado tanto hardware como software y las conficuraciones que hacemos (configuraciones de red por ejemplo) 
+## **2. Objetivos** <a name="id2"></a>
 
-#### ***Desarrollo***. <a name="id4"></a>
+Los objetivos de esta práctica son:
 
-En esta parte explicamos detalladamente los pasos que seguimos para realizar la práctica incluyendo capturas de pantalla y explicando que vemos en ellas. 
+- ✅ Configurar Nginx como servidor web para servir aplicaciones PHP
+- ✅ Integrar PHP-FPM para el procesamiento de scripts PHP
+- ✅ Crear una aplicación funcional de calculadora con interfaz web
+- ✅ Aplicar estilos CSS para una presentación visual adecuada
+- ✅ Desplegar la aplicación en un entorno nativo (localhost:80)
+- ✅ Dockerizar la aplicación usando Dockerfile personalizado
+- ✅ Exponer la aplicación dockerizada en el puerto 8017 (puesto 17)
+- ✅ Documentar todo el proceso de instalación y configuración
 
-> ***IMPORTANTE:*** si estamos capturando una terminal no hace falta capturar todo el escritorio y es importante que se vea el nombre de usuario.
+---
 
-Si encontramos dificultades a la hora de realizar algún paso debemos explicar esas dificultades, que pasos hemos seguido para resolverla y los resultados obtenidos.
+## **3. Material empleado** <a name="id3"></a>
 
-#### ***Conclusiones***. <a name="id5"></a>
+### **3.1 Software utilizado**
 
-En esta parte debemos exponer las conclusiones que sacamos del desarrollo de la prácica.
+| Software       | Versión   | Propósito                    |
+| -------------- | --------- | ---------------------------- |
+| Ubuntu         | 22.04 LTS | Sistema operativo            |
+| Nginx          | Latest    | Servidor web HTTP            |
+| PHP-FPM        | Latest    | Procesador de PHP            |
+| Docker         | Latest    | Plataforma de contenedores   |
+| Docker Compose | Latest    | Orquestación de contenedores |
+
+### **3.2 Hardware**
+
+- Ordenador personal con capacidad de virtualización
+- Conexión a internet para descargas de paquetes
+
+### **3.3 Archivos del proyecto**
+
+La estructura del proyecto es:
+
+```
+ut2/a1/
+├── calc_native/
+│   ├── index.php          # Aplicación PHP (entorno nativo)
+│   ├── calculadora.css    # Estilos CSS
+│   ├── calculadora.png    # Imagen de la calculadora
+│   └── nginx.conf         # Configuración Nginx nativo
+├── calc_docker/
+│   ├── Dockerfile         # Imagen Docker personalizada
+│   ├── docker-compose.yml # Orquestación de contenedores
+│   ├── nginx.conf         # Configuración Nginx Docker
+│   ├── index.php          # Aplicación PHP (dockerizada)
+│   ├── calculadora.css    # Estilos CSS
+│   └── calculadora.png    # Imagen de la calculadora
+└── README.md              # Este documento
+```
+
+---
+
+## **4. Desarrollo** <a name="id4"></a>
+
+### **4.1 Entorno Nativo** <a name="id4-1"></a>
+
+#### **4.1.1 Instalación de Nginx y PHP-FPM**
+
+Primero, actualizamos el sistema e instalamos los paquetes necesarios:
+
+```bash
+# Actualizar repositorios
+sudo apt update
+
+# Instalar Nginx
+sudo apt install nginx -y
+
+# Instalar PHP-FPM
+sudo apt install php-fpm -y
+
+# Verificar instalación
+nginx -v
+php-fpm -v
+```
+
+> **[CAPTURA]:** _Mostrar la terminal con las versiones de Nginx y PHP-FPM instaladas_
+
+#### **4.1.2 Creación de la estructura de carpetas**
+
+```bash
+# Crear directorio de la aplicación
+mkdir -p ~/calc_native
+
+# Verificar creación
+ls -la ~/calc_native/
+```
+
+> **[CAPTURA]:** _Mostrar la estructura de carpetas creada_
+
+#### **4.1.3 Archivos de la aplicación**
+
+Se han creado los siguientes archivos en `~/calc_native/`:
+
+**index.php**: Contiene la lógica de la calculadora con las operaciones:
+
+- Suma (+)
+- Resta (-)
+- Multiplicación (×)
+- División (÷)
+
+#### **4.1.4 Configuración de Nginx**
+
+Creamos el archivo de configuración del VirtualHost:
+
+```bash
+# Copiar configuración
+sudo cp nginx.conf /etc/nginx/sites-available/calculadora
+
+# Habilitar el sitio
+sudo ln -s /etc/nginx/sites-available/calculadora /etc/nginx/sites-enabled/
+
+# Deshabilitar sitio por defecto
+sudo unlink /etc/nginx/sites-enabled/default
+
+# Verificar sintaxis
+sudo nginx -t
+
+# Recargar Nginx
+sudo systemctl reload nginx
+```
+
+> **[CAPTURA]:** _Mostrar el resultado de `nginx -t` con "syntax is OK"_
+
+#### **4.1.5 Configuración de permisos**
+
+```bash
+# Dar permisos de lectura
+sudo chmod -R 755 ~/calc_native/
+
+# Verificar funcionamiento
+curl http://localhost
+```
+
+> **[CAPTURA]:** _Mostrar la respuesta del servidor local_
+
+#### **4.1.6 Verificación en navegador**
+
+Accedemos a: **http://localhost**
+
+> **[CAPTURA]:** _Captura de pantalla de la calculadora funcionando en el navegador_
+
+---
+
+### **4.2 Entorno Dockerizado** <a name="id4-2"></a>
+
+#### **4.2.1 Estructura del Dockerfile**
+
+El Dockerfile está basado en `nginx:alpine` e incluye:
+
+```dockerfile
+FROM nginx:alpine
+
+# Instalar PHP-FPM
+RUN apk add --no-cache php-fpm php-curl php-json php-mbstring
+
+# Crear directorio de trabajo
+RUN mkdir -p /var/www/html
+
+# Copiar archivos de la aplicación
+COPY index.php /var/www/html/
+COPY calculadora.css /var/www/html/
+COPY calculadora.png /var/www/html/
+
+# Copiar configuración Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Exponer puerto 80
+EXPOSE 80
+
+# Comandos de inicio
+CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
+```
+
+#### **4.2.2 Configuración de Nginx para Docker**
+
+```nginx
+server {
+    listen 80;
+    server_name localhost;
+    root /var/www/html;
+    index index.php index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_index index.php;
+    }
+}
+```
+
+#### **4.2.3 Docker Compose**
+
+Para facilitar el despliegue, se ha creado `docker-compose.yml`:
+
+```yaml
+version: "3.8"
+
+services:
+  web:
+    build: .
+    ports:
+      - "8017:80"
+    container_name: calculadora-nginx-php
+    restart: always
+```
+
+#### **4.2.4 Construcción y ejecución del contenedor**
+
+```bash
+# Navegar al directorio
+cd /home/alu/Documentos/dpl_antonio/ut2/a1/calc_docker
+
+# Construir la imagen
+docker build -t calculadora-nginx-php .
+
+# Verificar creación de imagen
+docker images | grep calculadora
+
+# Ejecutar el contenedor
+docker run -d -p 8017:80 --name calculadora-app calculadora-nginx-php
+```
+
+> **[CAPTURA]:** _Mostrar el build de la imagen Docker_
+
+> **[CAPTURA]:** _Mostrar los contenedores activos_
+
+#### **4.2.5 Verificación**
+
+```bash
+# Verificar que el contenedor está ejecutándose
+docker ps
+
+# Probar conexión
+curl http://localhost:8017
+```
+
+> **[CAPTURA]:** _Mostrar `docker ps` con el contenedor en ejecución_
+
+#### **4.2.6 Verificación en navegador**
+
+Accedemos a: **http://localhost:8017**
+
+> **[CAPTURA]:** _Captura de pantalla de la calculadora dockerizada funcionando_
+
+---
+
+## **5. Conclusiones** <a name="id5"></a>
+
+### **5.1 Logros alcanzados**
+
+✅ Se ha implementado correctamente una calculadora PHP funcional con interfaz web
+
+✅ Nginx + PHP-FPM configurados y funcionando en ambos entornos
+
+✅ Aplicación desplegada en entorno nativo (puerto 80)
+
+✅ Aplicación desplegada en contenedor Docker (puerto 8017)
+
+✅ Estilos CSS aplicados correctamente
+
+✅ Documentación completa del proceso
+
+### **5.2 Ventajas de cada enfoque**
+
+**Entorno Nativo:**
+
+- Mayor rendimiento directo
+- Configuración más simple para desarrollo local
+- Ideal para producción en servidores dedicados
+
+**Entorno Dockerizado:**
+
+- Portabilidad completa
+- Aislamiento de dependencias
+- Facilidad de despliegue y escalabilidad
+- Reproducibilidad del entorno
+
+### **5.3 Dificultades encontradas**
+
+_Aquí el alumno debe indicar las dificultades encontradas durante el desarrollo de la práctica y cómo las ha resuelto._
+
+### **5.4 Mejoras futuras**
+
+- Implementar operaciones adicionales (potencia, raíz cuadrada, etc.)
+- Añadir historial de operaciones
+- Implementar diseño responsivo para móviles
+- Utilizar variables de entorno para configuración
+
+---
+
+## **URL del Repositorio**
+
+[Enlace al repositorio GitHub de la asignatura](https://github.com/)
+
+---
+
+_Práctica realizada para la asignatura de Despliegue de Aplicaciones Web (DPL)_
