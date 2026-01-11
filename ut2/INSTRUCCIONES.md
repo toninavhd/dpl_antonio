@@ -1,13 +1,13 @@
 # Instrucciones de Despliegue
 
-## 📍 ubicación de los archivos
+## ubicación de los archivos
 
 - **Entorno Nativo:** `~/calc_native/`
 - **Entorno Dockerizado:** `/home/alu/Documentos/dpl_antonio/ut2/a1/calc_docker/`
 
 ---
 
-## 🚀 Despliegue Entorno Nativo
+## Despliegue Entorno Nativo
 
 ### Paso 1: Instalar Nginx y PHP-FPM
 
@@ -38,11 +38,11 @@ sudo chmod -R 755 ~/calc_native/
 
 ### Paso 3: Acceder a la aplicación
 
-🌐 **URL:** http://localhost
+**URL:** http://localhost
 
 ---
 
-## 🐳 Despliegue Entorno Dockerizado
+## Despliegue Entorno Dockerizado
 
 ### Paso 1: Verificar que Docker está instalado
 
@@ -72,11 +72,11 @@ docker-compose up -d
 
 ### Paso 3: Acceder a la aplicación
 
-🌐 **URL:** http://localhost:8017
+**URL:** http://localhost:8017
 
 ---
 
-## 🔧 Comandos útiles
+## Comandos útiles
 
 ### Verificar que Nginx está funcionando
 
@@ -109,7 +109,7 @@ sudo systemctl restart nginx
 
 ---
 
-## 📁 Estructura de archivos
+## Estructura de archivos
 
 ```
 ut2/a1/
@@ -130,7 +130,7 @@ ut2/a1/
 
 ---
 
-## ✅ Verificación
+## Verificación
 
 | Entorno     | URL                   | Estado |
 | ----------- | --------------------- | ------ |
