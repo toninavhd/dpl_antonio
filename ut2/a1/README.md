@@ -36,14 +36,14 @@ Ambas implementaciones permitirán realizar operaciones matemáticas básicas (s
 
 Los objetivos de esta práctica son:
 
-- ✅ Configurar Nginx como servidor web para servir aplicaciones PHP
-- ✅ Integrar PHP-FPM para el procesamiento de scripts PHP
-- ✅ Crear una aplicación funcional de calculadora con interfaz web
-- ✅ Aplicar estilos CSS para una presentación visual adecuada
-- ✅ Desplegar la aplicación en un entorno nativo (localhost:80)
-- ✅ Dockerizar la aplicación usando Dockerfile personalizado
-- ✅ Exponer la aplicación dockerizada en el puerto 8017 (puesto 17)
-- ✅ Documentar todo el proceso de instalación y configuración
+-  Configurar Nginx como servidor web para servir aplicaciones PHP
+-  Integrar PHP-FPM para el procesamiento de scripts PHP
+-  Crear una aplicación funcional de calculadora con interfaz web
+-  Aplicar estilos CSS para una presentación visual adecuada
+-  Desplegar la aplicación en un entorno nativo (localhost:80)
+-  Dockerizar la aplicación usando Dockerfile personalizado
+-  Exponer la aplicación dockerizada en el puerto 8017 (puesto 17)
+-  Documentar todo el proceso de instalación y configuración
 
 ---
 
@@ -274,44 +274,5 @@ Accedemos a: **http://localhost:8017**
 
 ## **5. Conclusiones** <a name="id5"></a>
 
-### **5.1 Logros alcanzados**
+Hemos aprendido a crear una calculadora php implementando nginx y docker para su despliegue y correcto funcionamiento en cualquier máquina. Aunque su configuración me fue algo complicada, es innegable la utilidad que tiene para compartir aplicaciones y desplegarlas sin necesidad de tener cada una de las dependencias.
 
-- Se ha implementado correctamente una calculadora PHP funcional con interfaz web
-
-- Nginx + PHP-FPM configurados y funcionando en ambos entornos
-
-- Aplicación desplegada en entorno nativo (puerto 80)
-
-- Aplicación desplegada en contenedor Docker (puerto 8017)
-
-- Estilos CSS aplicados correctamente
-
-- Documentación completa del proceso
-
-### **5.2 Ventajas de cada enfoque**
-
-**Entorno Nativo:**
-
-- Mayor rendimiento directo
-- Configuración más simple para desarrollo local
-- Ideal para producción en servidores dedicados
-
-**Entorno Dockerizado:**
-
-- Portabilidad completa
-- Aislamiento de dependencias
-- Facilidad de despliegue y escalabilidad
-- Reproducibilidad del entorno
-
-### **5.3 Dificultades encontradas**
-
-
----
-
-## **URL del Repositorio**
-
-[Enlace al repositorio GitHub de la asignatura](https://github.com/)
-
----
-
-_Práctica realizada para la asignatura de Despliegue de Aplicaciones Web (DPL)_
