@@ -170,7 +170,7 @@ curl http://localhost
 Accedemos a: **http://localhost**
 
 ---
-![Calculadora_nativa](img/ut2/a1/img/calc.png)
+![Calculadora_nativa](https://raw.githubusercontent.com/toninavhd/dpl_antonio/refs/heads/main/ut2/a1/img/calc.png?token=GHSAT0AAAAAADS7XOLEJSVJRBPW3YMDIBYC2LECY2A)
 
 
 ### **4.2 Entorno Dockerizado** <a name="id4-2"></a>
