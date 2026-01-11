@@ -4,7 +4,7 @@
 
 </center>
 
-**_Alumno:_**
+**_Alumno:_** Antonio Navarro Hernandez
 **_Curso:_** 2º de Ciclo Superior de Desarrollo de Aplicaciones Web
 
 ---
@@ -110,7 +110,6 @@ nginx -v
 php-fpm -v
 ```
 
-> **[CAPTURA]:** _Mostrar la terminal con las versiones de Nginx y PHP-FPM instaladas_
 
 #### **4.1.2 Creación de la estructura de carpetas**
 
@@ -122,7 +121,6 @@ mkdir -p ~/calc_native
 ls -la ~/calc_native/
 ```
 
-> **[CAPTURA]:** _Mostrar la estructura de carpetas creada_
 
 #### **4.1.3 Archivos de la aplicación**
 
@@ -156,7 +154,6 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-> **[CAPTURA]:** _Mostrar el resultado de `nginx -t` con "syntax is OK"_
 
 #### **4.1.5 Configuración de permisos**
 
@@ -168,13 +165,9 @@ sudo chmod -R 755 ~/calc_native/
 curl http://localhost
 ```
 
-> **[CAPTURA]:** _Mostrar la respuesta del servidor local_
-
 #### **4.1.6 Verificación en navegador**
 
 Accedemos a: **http://localhost**
-
-> **[CAPTURA]:** _Captura de pantalla de la calculadora funcionando en el navegador_
 
 ---
 
@@ -262,10 +255,6 @@ docker images | grep calculadora
 docker run -d -p 8017:80 --name calculadora-app calculadora-nginx-php
 ```
 
-> **[CAPTURA]:** _Mostrar el build de la imagen Docker_
-
-> **[CAPTURA]:** _Mostrar los contenedores activos_
-
 #### **4.2.5 Verificación**
 
 ```bash
@@ -276,13 +265,10 @@ docker ps
 curl http://localhost:8017
 ```
 
-> **[CAPTURA]:** _Mostrar `docker ps` con el contenedor en ejecución_
-
 #### **4.2.6 Verificación en navegador**
 
 Accedemos a: **http://localhost:8017**
 
-> **[CAPTURA]:** _Captura de pantalla de la calculadora dockerizada funcionando_
 
 ---
 
@@ -290,17 +276,17 @@ Accedemos a: **http://localhost:8017**
 
 ### **5.1 Logros alcanzados**
 
-✅ Se ha implementado correctamente una calculadora PHP funcional con interfaz web
+- Se ha implementado correctamente una calculadora PHP funcional con interfaz web
 
-✅ Nginx + PHP-FPM configurados y funcionando en ambos entornos
+- Nginx + PHP-FPM configurados y funcionando en ambos entornos
 
-✅ Aplicación desplegada en entorno nativo (puerto 80)
+- Aplicación desplegada en entorno nativo (puerto 80)
 
-✅ Aplicación desplegada en contenedor Docker (puerto 8017)
+- Aplicación desplegada en contenedor Docker (puerto 8017)
 
-✅ Estilos CSS aplicados correctamente
+- Estilos CSS aplicados correctamente
 
-✅ Documentación completa del proceso
+- Documentación completa del proceso
 
 ### **5.2 Ventajas de cada enfoque**
 
@@ -319,14 +305,6 @@ Accedemos a: **http://localhost:8017**
 
 ### **5.3 Dificultades encontradas**
 
-_Aquí el alumno debe indicar las dificultades encontradas durante el desarrollo de la práctica y cómo las ha resuelto._
-
-### **5.4 Mejoras futuras**
-
-- Implementar operaciones adicionales (potencia, raíz cuadrada, etc.)
-- Añadir historial de operaciones
-- Implementar diseño responsivo para móviles
-- Utilizar variables de entorno para configuración
 
 ---
 
