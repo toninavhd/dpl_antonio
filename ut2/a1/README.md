@@ -170,6 +170,8 @@ curl http://localhost
 Accedemos a: **http://localhost**
 
 ---
+![Calculadora_nativa](img/ut2/a1/img/calc.png)
+
 
 ### **4.2 Entorno Dockerizado** <a name="id4-2"></a>
 
