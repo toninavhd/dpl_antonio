@@ -6,5 +6,5 @@ app_name = 'places'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    
 ]
+

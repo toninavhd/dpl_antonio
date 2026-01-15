@@ -242,3 +242,328 @@ La configuración de PostgreSQL con Django ha sido completada exitosamente, logr
 - El valor de utilizar herramientas de administración como pgAdmin para simplificar la gestión de bases de datos.
 
 Esta configuración establece una base sólida para el desarrollo de aplicaciones web con Django y PostgreSQL, proporcionando un entorno profesional y escalable que puede evolucionar hacia un entorno de producción completo.
+
+---
+
+## Configuración de Django con PostgreSQL
+
+### Instalación de Django
+
+Para instalar Django y sus dependencias utilizamos pip:
+
+```bash
+pip install django
+```
+
+Podemos comprobar la versión instalada:
+
+```bash
+python -m django --version
+4.1.3
+```
+
+### Creación del proyecto Django
+
+Django proporciona la herramienta `django-admin` para crear la estructura base del proyecto:
+
+```bash
+django-admin startproject main .
+```
+
+Estructura del proyecto:
+
+```
+.
+├── manage.py
+└── main
+    ├── asgi.py
+    ├── __init__.py
+    ├── settings.py
+    ├── urls.py
+    └── wsgi.py
+```
+
+### Creación de la aplicación "places"
+
+Un proyecto Django está formado por aplicaciones. Creamos nuestra primera aplicación:
+
+```bash
+./manage.py startapp places
+```
+
+Estructura de la aplicación:
+
+```
+places/
+├── admin.py
+├── apps.py
+├── __init__.py
+├── migrations
+│   └── __init__.py
+├── models.py
+├── tests.py
+├── urls.py
+└── views.py
+```
+
+### Configuración de la aplicación en settings.py
+
+Activamos la aplicación en `main/settings.py`:
+
+```python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    # Nueva línea ↓
+    'places.apps.PlacesConfig',
+]
+```
+
+### Configuración de PostgreSQL
+
+Instalamos el driver psycopg2 para conectar Python con PostgreSQL:
+
+```bash
+pip install psycopg2
+```
+
+Configuramos la base de datos en `main/settings.py`:
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'travelroad',
+        'USER': 'travelroad_user',
+        'PASSWORD': 'dpl0000',
+        'HOST': 'localhost',
+        'PORT': 5432,
+    }
+}
+```
+
+### Modelo Place
+
+Creamos el modelo en `places/models.py`:
+
+```python
+from django.db import models
+
+class Place(models.Model):
+    name = models.CharField(max_length=255)
+    visited = models.BooleanField()
+
+    class Meta:
+        db_table = "places"
+
+    def __str__(self):
+        return self.name
+```
+
+### Vista Index
+
+Creamos la vista en `places/views.py`:
+
+```python
+from django.http import HttpResponse
+from django.template import loader
+from .models import Place
+
+def index(request):
+    wished = Place.objects.filter(visited=False)
+    visited = Place.objects.filter(visited=True)
+    template = loader.get_template('places/index.html')
+    context = {
+        'wished': wished,
+        'visited': visited,
+    }
+    return HttpResponse(template.render(context, request))
+```
+
+### Plantilla
+
+Creamos la plantilla en `places/templates/places/index.html`:
+
+```html
+<h1>My Travel Bucket List</h1>
+
+<h2>Places I'd Like to Visit</h2>
+<ul>
+  {% for place in wished %}
+  <li>{{ place }}</li>
+  {% endfor %}
+</ul>
+
+<h2>Places I've Already Been To</h2>
+<ul>
+  {% for place in visited %}
+  <li>{{ place }}</li>
+  {% endfor %}
+</ul>
+```
+
+### Configuración de URLs
+
+Creamos `places/urls.py`:
+
+```python
+from django.urls import path
+from . import views
+
+app_name = 'places'
+
+urlpatterns = [
+    path('', views.index, name='index'),
+]
+```
+
+Y actualizamos `main/urls.py`:
+
+```python
+from django.contrib import admin
+from django.urls import path
+from django.urls import include, path
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('places.urls', 'places')),
+]
+```
+
+### Parametrización con prettyconf
+
+Instalamos prettyconf para cargar variables de entorno:
+
+```bash
+pip install prettyconf
+```
+
+Actualizamos `main/settings.py`:
+
+```python
+from pathlib import Path
+from prettyconf import config
+
+DEBUG = config('DEBUG', default=True, cast=config.boolean)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=[], cast=config.list)
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME', default='travelroad'),
+        'USER': config('DB_USERNAME', default='travelroad_user'),
+        'PASSWORD': config('DB_PASSWORD', default='dpl0000'),
+        'HOST': config('DB_HOST', default='localhost'),
+        'PORT': config('DB_PORT', default=5432, cast=int),
+    }
+}
+```
+
+### Requirements.txt
+
+Creamos el archivo de requisitos:
+
+```
+django
+psycopg2
+prettyconf
+```
+
+### Verificación
+
+Comprobamos que la configuración es correcta:
+
+```bash
+./manage.py check
+System check identified no issues (0 silenced).
+```
+
+Lanzamos el servidor de desarrollo:
+
+```bash
+./manage.py runserver
+```
+
+La aplicación está disponible en `http://localhost:8000` mostrando la lista de lugares visitados y por visitar.
+
+---
+
+## Scripts de Despliegue
+
+### Script de inicio (run.sh)
+
+El script `run.sh` activa el entorno virtual y ejecuta Gunicorn con el socket UNIX:
+
+```bash
+#!/bin/bash
+
+cd $(dirname $0)
+source .venv/bin/activate
+gunicorn -b unix:/tmp/travelroad.sock main.wsgi:application
+```
+
+### Script de despliegue (deploy.sh)
+
+El script `deploy.sh` conecta por SSH al servidor de producción y ejecuta:
+
+```bash
+#!/bin/bash
+
+ssh arkania "
+  cd $(dirname $0)
+  git pull
+
+  source .venv/bin/activate
+  pip install -r requirements.txt
+
+  # python manage.py migrate
+  # python manage.py collectstatic --no-input
+
+  supervisorctl restart travelroad
+"
+```
+
+### Configuración de Supervisor
+
+```ini
+[program:travelroad]
+user = sdelquin
+command = /home/sdelquin/travelroad/run.sh
+autostart = true
+autorestart = true
+stopsignal = INT
+killasgroup = true
+stderr_logfile = /var/log/supervisor/travelroad.err.log
+stdout_logfile = /var/log/supervisor/travelroad.out.log
+```
+
+### Configuración de Nginx
+
+```nginx
+server {
+    server_name travelroad;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/tmp/travelroad.sock;  # socket UNIX
+    }
+}
+```
+
+### Archivo de entorno (.env.example)
+
+```env
+DEBUG=0
+ALLOWED_HOSTS=travelroad.dpl.arkania.es
+DB_NAME=travelroad
+DB_USERNAME=travelroad_user
+DB_PASSWORD=dpl0000
+DB_HOST=localhost
+DB_PORT=5432
+```
+
+> **Nota:** El archivo `.env` debe dejarse fuera de control de versiones por seguridad.
