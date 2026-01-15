@@ -16,7 +16,7 @@ document.getElementById("imageForm").addEventListener("submit", function (e) {
     const img = document.createElement("img");
 
     // Construir URL con parámetros de ngx_small_light
-    const baseUrl = `https://images.antonio_dpl/img/image${imgNum}.jpg`;
+    const baseUrl = `http://localhost/img/image${imgNum}.jpg`;
     const params = new URLSearchParams({
       small: `square,${size}`,
       "small:extborder": border,

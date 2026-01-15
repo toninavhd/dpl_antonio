@@ -15,7 +15,8 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     vim \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd -r -s /sbin/nologin nginx
 
 # Crear directorio de trabajo
 WORKDIR /tmp
@@ -33,16 +34,44 @@ RUN nginx -v 2>&1 | grep -o '/[0-9.]*' | cut -d'/' -f2 > /tmp/nginx_version.txt 
     cd nginx-${NGINX_VERSION} && \
     ./configure --add-dynamic-module=../ngx_small_light --with-compat && \
     make modules && \
+    mkdir -p /etc/nginx/modules && \
     cp objs/ngx_http_small_light_module.so /etc/nginx/modules/ && \
     cd / && rm -rf /tmp/ngx_small_light /tmp/nginx-${NGINX_VERSION} /tmp/nginx_version.txt
 
 # Crear estructura de directorios
 RUN mkdir -p /var/www/html/img && \
     mkdir -p /var/www/html/css && \
-    mkdir -p /var/www/html/js
+    mkdir -p /var/www/html/js && \
+    mkdir -p /etc/nginx/modules
 
 # Copiar imágenes
 COPY images/ /var/www/html/img/
+
+# Configurar ImageMagick para permitir el procesamiento de imágenes
+# Esto es necesario para ngx_small_light
+RUN cat > /etc/ImageMagick-6/policy.xml << 'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policymap [
+  <!ELEMENT policymap (policy)+>
+  <!ATTLIST policymap xmlns CDATA #FIXED ''>
+  <!ELEMENT policy EMPTY>
+  <!ATTLIST policy xmlns CDATA #FIXED '' domain NMTOKEN #REQUIRED
+    name NMTOKEN #IMPLIED pattern CDATA #IMPLIED rights NMTOKEN #IMPLIED
+    stealth NMTOKEN #IMPLIED value CDATA #IMPLIED>
+]>
+<policymap>
+  <policy domain="resource" name="memory" value="256MiB"/>
+  <policy domain="resource" name="map" value="512MiB"/>
+  <policy domain="resource" name="width" value="16KP"/>
+  <policy domain="resource" name="height" value="16KP"/>
+  <policy domain="resource" name="area" value="128MB"/>
+  <policy domain="resource" name="disk" value="1GiB"/>
+  <!-- Permitir todos los formatos de imagen -->
+  <policy domain="coder" rights="read|write" pattern="*" />
+  <policy domain="filter" rights="read|write" pattern="*" />
+  <policy domain="delegate" rights="read|write" pattern="*" />
+</policymap>
+EOF
 
 # Copiar aplicación web
 COPY index.html /var/www/html/
