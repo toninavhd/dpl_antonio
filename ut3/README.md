@@ -302,7 +302,7 @@ docker run -d -p 80:80 -p 443:443 --name antonio_small_light_instance antonio_sm
 
 **También se puede usar docker-compose para restaurar:**
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Compartir con compañeros

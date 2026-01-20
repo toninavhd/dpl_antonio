@@ -85,7 +85,7 @@ build_image() {
     print_status "Construyendo imagen Docker..."
     cd "$PROJECT_DIR"
     
-    if docker compose build --no-cache 2>/dev/null || docker-compose build --no-cache; then
+    if docker compose build --no-cache 2>/dev/null || docker compose build --no-cache; then
         print_success "Imagen construida correctamente."
     else
         print_error "Error al construir la imagen."
@@ -108,7 +108,7 @@ start_container() {
             docker start "$CONTAINER_NAME"
         fi
     else
-        if docker compose up -d 2>/dev/null || docker-compose up -d; then
+        if docker compose up -d 2>/dev/null || docker compose up -d; then
             print_success "Contenedor iniciado correctamente."
         else
             print_error "Error al iniciar el contenedor."
@@ -152,7 +152,7 @@ stop_container() {
     print_status "Deteniendo contenedor..."
     cd "$PROJECT_DIR"
     
-    if docker compose down 2>/dev/null || docker-compose down; then
+    if docker compose down 2>/dev/null || docker compose down; then
         print_success "Contenedor detenido correctamente."
     else
         print_warning "No se pudo detener el contenedor (¿existe?)."
