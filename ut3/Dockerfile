@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     vim \
+    openssl \
     && rm -rf /var/lib/apt/lists/* \
     && useradd -r -s /sbin/nologin nginx
 
@@ -42,7 +43,17 @@ RUN nginx -v 2>&1 | grep -o '/[0-9.]*' | cut -d'/' -f2 > /tmp/nginx_version.txt 
 RUN mkdir -p /var/www/html/img && \
     mkdir -p /var/www/html/css && \
     mkdir -p /var/www/html/js && \
-    mkdir -p /etc/nginx/modules
+    mkdir -p /etc/nginx/modules && \
+    mkdir -p /etc/nginx/ssl && \
+    mkdir -p /tmp/small_light
+
+# Generar certificado SSL autofirmado con SAN para el hostname images.antonio.me
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout /etc/nginx/ssl/server.key \
+    -out /etc/nginx/ssl/server.crt \
+    -subj "/C=ES/ST=Canarias/L=SantaCruz/O=Education/CN=images.antonio.me" \
+    -addext "subjectAltName=DNS:images.antonio.me,DNS:www.images.antonio.me" \
+    && chmod 600 /etc/nginx/ssl/server.key
 
 # Copiar imágenes
 COPY images/ /var/www/html/img/
@@ -60,16 +71,17 @@ RUN cat > /etc/ImageMagick-6/policy.xml << 'EOF'
     stealth NMTOKEN #IMPLIED value CDATA #IMPLIED>
 ]>
 <policymap>
-  <policy domain="resource" name="memory" value="256MiB"/>
-  <policy domain="resource" name="map" value="512MiB"/>
-  <policy domain="resource" name="width" value="16KP"/>
-  <policy domain="resource" name="height" value="16KP"/>
-  <policy domain="resource" name="area" value="128MB"/>
-  <policy domain="resource" name="disk" value="1GiB"/>
+  <policy domain="resource" name="memory" value="512MiB"/>
+  <policy domain="resource" name="map" value="1GiB"/>
+  <policy domain="resource" name="width" value="32KP"/>
+  <policy domain="resource" name="height" value="32KP"/>
+  <policy domain="resource" name="area" value="256MB"/>
+  <policy domain="resource" name="disk" value="2GiB"/>
   <!-- Permitir todos los formatos de imagen -->
   <policy domain="coder" rights="read|write" pattern="*" />
   <policy domain="filter" rights="read|write" pattern="*" />
   <policy domain="delegate" rights="read|write" pattern="*" />
+  <policy domain="path" rights="read|write" pattern="@*" />
 </policymap>
 EOF
 
@@ -77,13 +89,34 @@ EOF
 COPY index.html /var/www/html/
 COPY style.css /var/www/html/css/
 COPY script.js /var/www/html/js/
+COPY entrypoint.sh /entrypoint.sh
 
-# Copiar configuración de Nginx
+# CONCEDER PERMISOS AL USUARIO NGINX - CORREGIDO
+RUN chmod +x /entrypoint.sh && \
+    chown -R nginx:nginx /var/www/html && \
+    chmod -R 755 /var/www/html/img && \
+    chmod 644 /var/www/html/img/*.jpg && \
+    chown -R nginx:nginx /etc/nginx/modules && \
+    chmod 755 /etc/nginx/modules && \
+    chmod 644 /etc/nginx/modules/*.so && \
+    chown -R nginx:nginx /var/log/nginx && \
+    chown -R nginx:nginx /tmp/small_light && \
+    chmod 755 /tmp/small_light && \
+    touch /var/run/nginx.pid && \
+    chown nginx:nginx /var/run/nginx.pid && \
+    chown nginx:nginx /etc/nginx/ssl && \
+    chmod 600 /etc/nginx/ssl/server.key && \
+    chmod 644 /etc/nginx/ssl/server.crt && \
+    chown nginx:nginx /etc/ImageMagick-6/policy.xml && \
+    chmod 644 /etc/ImageMagick-6/policy.xml
+
+# Copiar configuración de Nginx (solo la parte del archivo, sin duplicados)
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Exponer puertos
 EXPOSE 80 443
 
-# Iniciar nginx
+# Usar entrypoint para configurar permisos al iniciar
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
 

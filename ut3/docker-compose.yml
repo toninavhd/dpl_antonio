@@ -2,16 +2,28 @@ version: "3.8"
 
 services:
   nginx:
-    build: .
-    container_name: antonio_dpl_small_light
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: antonio_small_light
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./index.html:/var/www/html/index.html:ro
+      - ./style.css:/var/www/html/style.css:ro
+      - ./script.js:/var/www/html/js:ro
+      - ./images:/var/www/html/img:ro
     networks:
       - app-network
+    restart: unless-stopped
+    # Necesario para que el contenedor no termine inmediatamente si hay errores
+    tty: true
+    # User root para evitar problemas de permisos
+    user: root
 
 networks:
   app-network:
     driver: bridge
+
