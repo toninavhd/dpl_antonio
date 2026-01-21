@@ -15,22 +15,34 @@ document.getElementById("imageForm").addEventListener("submit", function (e) {
     const imgNum = i.toString().padStart(2, "0");
     const img = document.createElement("img");
 
-    // Construir URL relativa con parámetros de ngx_small_light
-    // Los parámetros se pasan como query string para ngx_small_light
+    // Construir URL relativa con parámetros GET de ngx_small_light
+    // IMPORTANTE: ngx_small_light usa parámetros directos: dw, dh, bw, bc, blur, sharpen
     const baseUrl = `/img/image${imgNum}.jpg`;
     const params = new URLSearchParams();
     
-    // Parámetros de ngx_small_light
-    // small: formato "square,width" para imágenes cuadradas
-    params.set("small", `square,${size}`);
+    // Parámetros de ngx_small_light (formato GET directo)
+    // dw = destination width, dh = destination height
+    // da = l (long-edge based) para mantener aspecto cuadrado
+    params.set("dw", size);
+    params.set("dh", size);
+    params.set("da", "l");
     
-    // Borde exterior
-    params.set("small:extborder", border);
-    params.set("small:extbordercolor", borderColor);
+    // Borde (bw = border width, bc = border color)
+    if (border > 0) {
+      params.set("bw", border);
+      // Eliminar # del color hexadecimal
+      params.set("bc", borderColor.replace("#", ""));
+    }
     
-    // Enfoque y desenfoque
-    params.set("small:radialblur", focus);
-    params.set("small:gaussianblur", blur);
+    // Enfoque (sharpen: radius x sigma)
+    if (focus && focus !== "0x0") {
+      params.set("sharpen", focus);
+    }
+    
+    // Desenfoque (blur: radius x sigma)
+    if (blur && blur !== "0x0") {
+      params.set("blur", blur);
+    }
 
     img.src = `${baseUrl}?${params.toString()}`;
     img.alt = `Imagen ${imgNum}`;
@@ -42,4 +54,3 @@ document.getElementById("imageForm").addEventListener("submit", function (e) {
 
 // Generar imágenes al cargar la página
 document.getElementById("imageForm").dispatchEvent(new Event("submit"));
-
