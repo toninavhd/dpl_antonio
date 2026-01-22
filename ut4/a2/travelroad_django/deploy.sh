@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# Directorio del proyecto en el servidor remoto
+REMOTE_DIR="/home/toni/Documentos/dpl_antonio/ut4/a2/travelroad_django"
+
 ssh arkania "
-  cd $(dirname $0)
+  cd $REMOTE_DIR
   git pull
 
   source .venv/bin/activate
