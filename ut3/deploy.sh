@@ -49,7 +49,11 @@ check_docker() {
         print_error "Docker no está instalado. Por favor, instala Docker primero."
         exit 1
     fi
-    if ! command -v docker-compose &> /dev/null && ! docker compose version &> /dev/null 2>&1; then
+    if command -v docker-compose &> /dev/null; then
+        COMPOSE_CMD="docker-compose"
+    elif docker compose version &> /dev/null 2>&1; then
+        COMPOSE_CMD="docker compose"
+    else
         print_error "Docker Compose no está instalado. Por favor, instala Docker Compose primero."
         exit 1
     fi
@@ -85,7 +89,7 @@ build_image() {
     print_status "Construyendo imagen Docker..."
     cd "$PROJECT_DIR"
     
-    if docker compose build --no-cache 2>/dev/null || docker compose build --no-cache; then
+    if $COMPOSE_CMD build; then
         print_success "Imagen construida correctamente."
     else
         print_error "Error al construir la imagen."
@@ -108,7 +112,7 @@ start_container() {
             docker start "$CONTAINER_NAME"
         fi
     else
-        if docker compose up -d 2>/dev/null || docker compose up -d; then
+        if $COMPOSE_CMD up -d; then
             print_success "Contenedor iniciado correctamente."
         else
             print_error "Error al iniciar el contenedor."
@@ -152,7 +156,7 @@ stop_container() {
     print_status "Deteniendo contenedor..."
     cd "$PROJECT_DIR"
     
-    if docker compose down 2>/dev/null || docker compose down; then
+    if $COMPOSE_CMD down; then
         print_success "Contenedor detenido correctamente."
     else
         print_warning "No se pudo detener el contenedor (¿existe?)."
