@@ -76,7 +76,7 @@
         <p style="color: #888; margin-top: 10px;">Accede a <code>/travelroad</code> para ver la lista de lugares.</p>
         
         <div class="powered-by">
-            <p>Powered by <strong>Laravel</strong></p>
+            <p>Powered by <strong>Laravel-0</strong></p>
         </div>
     </div>
 </body>
