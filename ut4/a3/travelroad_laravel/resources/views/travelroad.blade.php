@@ -5,7 +5,7 @@
 
   <body>
     <h1>My Travel Bucket List</h1>
-    <p><em>Powered by {{ $framework }}</em></p>
+  
     
     <h2>Places I'd Like to Visit</h2>
     <ul>
@@ -21,6 +21,6 @@
       @endforeach
     </ul>
 
-    <p>Powered with Laravel</p>
+   <p><em>Powered by {{ $framework }}</em></p>
   </body>
 </html>

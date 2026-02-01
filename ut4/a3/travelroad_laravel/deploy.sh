@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ~/travelroad_laravel
+cd /home/toni/Documentos/dpl_antonio/ut4/a3/travelroad_laravel
 git pull
 composer install --no-dev --optimize-autoloader
 php artisan config:cache
