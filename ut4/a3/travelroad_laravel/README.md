@@ -1,234 +1,59 @@
-# TravelRoad - Laravel Application
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
-  <a href="https://laravel.com" target="_blank">
-    <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
-  </a>
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-<p align="center">
-  <strong>Powered by Laravel</strong>
-</p>
+## About Laravel
 
-## Descripción
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-TravelRoad es una aplicación web desarrollada con Laravel que permite gestionar una lista de lugares visitados y lugares que se desean visitar. La aplicación consulta una base de datos PostgreSQL y muestra los resultados en una interfaz HTML.
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-## Requisitos del Sistema
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-- **PHP**: Versión 8.4
-- **Composer**: Gestor de dependencias de PHP
-- **PostgreSQL**: Base de datos
-- **Nginx**: Servidor web
-- **PHP-FPM**: Procesador de PHP para Nginx
+## Learning Laravel
 
-### Paquetes PHP requeridos
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
 
-```bash
-sudo apt install -y php8.4-mbstring php8.4-xml php8.4-bcmath php8.4-curl php8.4-pgsql
-```
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-| Paquete | Descripción |
-|---------|-------------|
-| mbstring | Gestión de cadenas de caracteres multibyte |
-| xml | Análisis XML |
-| bcmath | Operaciones matemáticas de precisión arbitraria |
-| curl | Cliente de cURL |
-| pgsql | Herramientas para PostgreSQL |
+## Laravel Sponsors
 
-## Instalación
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-1. **Clonar el repositorio**:
+### Premium Partners
 
-```bash
-git clone <repository-url> travelroad_laravel
-cd travelroad_laravel
-```
+- **[Vehikl](https://vehikl.com)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
+- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+- **[Redberry](https://redberry.international/laravel-development)**
+- **[Active Logic](https://activelogic.com)**
 
-2. **Instalar dependencias**:
+## Contributing
 
-```bash
-composer install
-```
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-3. **Configurar el archivo .env**:
+## Code of Conduct
 
-```bash
-cp .env.example .env
-php artisan key:generate
-```
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-4. **Configurar la base de datos** en `.env`:
+## Security Vulnerabilities
 
-```env
-DB_CONNECTION=pgsql
-DB_HOST=127.0.0.1
-DB_PORT=5432
-DB_DATABASE=travelroad
-DB_USERNAME=travelroad_user
-DB_PASSWORD=dpl0000
-```
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-5. **Ejecutar migraciones**:
+## License
 
-```bash
-php artisan migrate
-```
-
-## Configuración Nginx
-
-### Permisos de carpetas
-
-```bash
-sudo chgrp -R nginx storage bootstrap/cache
-sudo chmod -R ug+rwx storage bootstrap/cache
-```
-
-### Configuración del Virtual Host
-
-Copiar el archivo `nginx.conf` a `/etc/nginx/conf.d/travelroad.conf`:
-
-```bash
-sudo cp nginx.conf /etc/nginx/conf.d/travelroad.conf
-```
-
-### Verificar y recargar Nginx
-
-```bash
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-### Añadir al archivo hosts (para desarrollo local)
-
-```bash
-echo "127.0.0.1 travelroad" | sudo tee -a /etc/hosts
-```
-
-## Certificado SSL
-
-Para habilitar HTTPS en producción, se requiere un certificado SSL. Se pueden obtener certificados gratuitos mediante Let's Encrypt.
-
-### Instalación de Certbot
-
-```bash
-sudo apt install -y certbot python3-certbot-nginx
-```
-
-### Obtención del certificado
-
-```bash
-sudo certbot --nginx -d travelroad
-```
-
-### Renovación automática
-
-Los certificados de Let's Encrypt caducan a los 90 días. Para configurar la renovación automática:
-
-```bash
-sudo systemctl enable certbot.timer
-sudo systemctl start certbot.timer
-```
-
-### Configuración Nginx con SSL (producción)
-
-El archivo `nginx.conf` ya incluye una sección comentada para HTTPS. Descomentar y configurar:
-
-```nginx
-server {
-    listen 443 ssl http2;
-    server_name travelroad;
-    root /home/toni/Documentos/dpl_antonio/ut4/a3/travelroad_laravel/public;
-    
-    ssl_certificate /etc/letsencrypt/live/travelroad/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/travelroad/privkey.pem;
-    
-    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-    
-    # ... resto de la configuración
-}
-```
-
-## Estructura del Proyecto
-
-```
-travelroad_laravel/
-├── app/
-│   └── Providers/
-│       └── AppServiceProvider.php
-├── bootstrap/
-│   ├── app.php
-│   └── providers.php
-├── config/
-│   ├── app.php
-│   └── database.php
-├── resources/
-│   └── views/
-│       └── travelroad.blade.php
-├── routes/
-│   ├── console.php
-│   └── web.php
-├── .editorconfig
-├── .env
-├── .env.example
-├── .gitignore
-├── artisan
-├── composer.json
-├── deploy.sh
-└── nginx.conf
-```
-
-## Archivo deploy.sh
-
-El script de despliegue automatiza el proceso de actualización en producción:
-
-```bash
-chmod +x deploy.sh
-./deploy.sh
-```
-
-El script realiza las siguientes operaciones:
-1. Conexión SSH al servidor
-2. Actualización del código fuente (git pull)
-3. Instalación de dependencias (composer install)
-4. Ejecución de migraciones
-5. Limpieza de caché
-6. Optimización de la aplicación
-7. Recarga de PHP-FPM
-
-## Configuración de Git
-
-### Archivos ignorados (.gitignore)
-
-El archivo `.gitignore` está configurado para:
-- Ignorar archivos de configuración sensibles (.env)
-- Ignorar la carpeta vendor (se genera con `composer install`)
-- Ignorar archivos de caché y logs
-- Ignorar archivos de desarrollo
-
-### Variables sensibles ignoradas
-
-Las siguientes variables del archivo `.env` NO deben incluirse en el control de versiones:
-- `APP_KEY`: Clave de encriptación de la aplicación
-- `DB_PASSWORD`: Contraseña de la base de datos
-- Cualquier credential de API o servicio externo
-
-## Uso
-
-Una vez configurado, acceder a la aplicación en:
-
-- **Desarrollo**: http://travelroad
-- **Producción**: https://travelroad
-
-La página principal muestra:
-- Lista de lugares por visitar
-- Lista de lugares visitados
-
-## Powered by
-
-Esta aplicación está **powered by Laravel**, un framework PHP moderno y elegante para desarrolladores web.
-
-## Licencia
-
-Este proyecto está bajo la licencia MIT.
-
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
