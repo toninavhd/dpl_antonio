@@ -32,7 +32,7 @@ python manage.py migrate
 echo ""
 echo "4. Reiniciando servicio supervisor..."
 echo "-------------------------------------"
-supervisorctl restart travelroad_django
+supervisorctl restart travelroad-django
 
 echo ""
 echo "5. Recargando nginx..."
@@ -45,5 +45,5 @@ echo "Despliegue completado exitosamente!"
 echo "=================================="
 echo ""
 echo "La aplicación debería estar disponible en:"
-echo "http://travelroad_django.local"
+echo "http://travelroad-django.local"
 
