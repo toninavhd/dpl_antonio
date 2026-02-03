@@ -10,13 +10,17 @@ echo "Deploy script para travelroad_django"
 echo "=================================="
 
 # Obtener el directorio del script
+SERVER_HOST="${SERVER_HOST:-dplprod_antonio@10.102.19.40}"
+
+ssh "$SERVER_HOST" 
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 echo ""
 echo "1. Instalando dependencias..."
 echo "----------------------------"
-source .venv/bin/activate
+source venv/bin/activate
 pip install -r requirements.txt
 
 echo ""
